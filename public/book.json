@@ -1,0 +1,70 @@
+{
+  "pages": [
+    {
+      "title": "Welcome to Web Development",
+      "fileName": "getting-started.html",
+      "description": "Introduction to web development fundamentals and setting up your development environment",
+      "sequence": 1,
+      "gifUrl": "https://static.wixstatic.com/media/495b2d_48bef8b5dc604f468c65db5585f557aa~mv2.gif",
+      "idleGifUrl": "https://static.wixstatic.com/media/495b2d_63ecf889678242209e61a7039f527685~mv2.gif",
+      "audioUrl": "https://static.wixstatic.com/mp3/495b2d_79c0438b23e845e78654484deb4031c4.mp3",
+      "chapter": "Chapter 1",
+      "subChapters": ["Introduction", "Development Environment"]
+    },
+    {
+      "title": "MilkeyWay !",
+      "fileName": "html-fundamentals.html",
+      "description": "This is a model  of our Solar Syatem with planets and their orbits.",
+      "sequence": 2,
+      "gifUrl": "https://static.wixstatic.com/media/495b2d_48bef8b5dc604f468c65db5585f557aa~mv2.gif",
+      "idleGifUrl": "https://static.wixstatic.com/media/495b2d_63ecf889678242209e61a7039f527685~mv2.gif",
+      "audioUrl": "https://static.wixstatic.com/mp3/495b2d_79c0438b23e845e78654484deb4031c4.mp3",
+      "chapter": "Chapter 2",
+      "subChapters": ["Basic Elements", "Document Structure"]
+    },
+    {
+      "title": "Neutralization Salt Formation  ",
+      "fileName": "intro.html",
+      "description": "Neutralization reaction between hydrochloric acid (HCl) and sodium hydroxide (NaOH).",
+      "sequence": 3,
+      "gifUrl": "https://static.wixstatic.com/media/495b2d_48bef8b5dc604f468c65db5585f557aa~mv2.gif",
+      "idleGifUrl": "https://static.wixstatic.com/media/495b2d_63ecf889678242209e61a7039f527685~mv2.gif",
+      "audioUrl": "https://static.wixstatic.com/mp3/495b2d_79c0438b23e845e78654484deb4031c4.mp3",
+      "chapter": "Chapter 3",
+      "subChapters": ["Selectors", "Box Model", "Flexbox", "Grid"]
+    },
+    {
+      "title": "JavaScript Basics",
+      "fileName": "example.html",
+      "description": "Introduction to JavaScript programming, variables, functions, and control flow",
+      "sequence": 4,
+      "gifUrl": "https://static.wixstatic.com/media/495b2d_48bef8b5dc604f468c65db5585f557aa~mv2.gif",
+      "idleGifUrl": "https://static.wixstatic.com/media/495b2d_63ecf889678242209e61a7039f527685~mv2.gif",
+      "audioUrl": "https://static.wixstatic.com/mp3/495b2d_79c0438b23e845e78654484deb4031c4.mp3",
+      "chapter": "Chapter 4",
+      "subChapters": ["Variables", "Functions", "Objects", "Arrays"]
+    },
+    {
+      "title": "React Fundamentals",
+      "fileName": "react-components.tsx",
+      "description": "Learn React components, state management, and modern web application development",
+      "sequence": 5,
+      "gifUrl": "https://static.wixstatic.com/media/495b2d_48bef8b5dc604f468c65db5585f557aa~mv2.gif",
+      "idleGifUrl": "https://static.wixstatic.com/media/495b2d_63ecf889678242209e61a7039f527685~mv2.gif",
+      "audioUrl": "https://static.wixstatic.com/mp3/495b2d_79c0438b23e845e78654484deb4031c4.mp3",
+      "chapter": "Chapter 5",
+      "subChapters": ["Components", "Props", "State", "Hooks"]
+    },
+    {
+      "title": "test Fundamentals",
+      "fileName": "react-components.tsx",
+      "description": "Learn React components, state management, and modern web application development",
+      "sequence": 6,
+      "gifUrl": "https://static.wixstatic.com/media/495b2d_a98ffa6e3b204ac9838cd95acc53b2da~mv2.gif",
+      "idleGifUrl": "https://static.wixstatic.com/media/495b2d_63ecf889678242209e61a7039f527685~mv2.gif",
+      "audioUrl": "https://static.wixstatic.com/mp3/495b2d_79c0438b23e845e78654484deb4031c4.mp3",
+      "chapter": "Chapter 5",
+      "subChapters": ["Components", "Props", "State", "Hooks"]
+    }
+  ]
+}

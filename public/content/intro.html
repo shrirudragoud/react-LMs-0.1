@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chemical Reactions - Collision Animation</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #e0f7ff 0%, #c5e5ff 100%);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        color: #1a365d;
+      }
+
+      .container {
+        width: 100vw;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 70% 30%;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        gap: 20px;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(8px);
+      }
+
+      .left-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .header {
+        text-align: center;
+        background: linear-gradient(to right, #f0f9ff, #e6f3ff);
+        padding: 20px;
+        border-radius: 15px;
+        color: #2c5282;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .header h1 {
+        font-size: 1.8em;
+        margin-bottom: 8px;
+        background: linear-gradient(120deg, #2c5282, #4299e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+      }
+
+      .header p {
+        font-size: 1em;
+        color: #4a5568;
+      }
+
+      .reaction-stage {
+        flex: 1;
+        background: linear-gradient(145deg, #f0f9ff 0%, #e6f3ff 100%);
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+      }
+
+      .controls {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        padding: 10px;
+      }
+
+      button {
+        padding: 12px 24px;
+        font-size: 1em;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 6px rgba(66, 153, 225, 0.3);
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(66, 153, 225, 0.4);
+        background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .right-panel {
+        background: linear-gradient(145deg, #f8fafc 0%, #f0f9ff 100%);
+        padding: 25px;
+        border-radius: 20px;
+        overflow-y: auto;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .molecule {
+        position: absolute;
+        width: 120px;
+        text-align: center;
+        transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .molecule-content {
+        background: linear-gradient(135deg, #63b3ed 0%, #4299e1 100%);
+        padding: 15px;
+        border-radius: 50%;
+        width: 90px;
+        height: 90px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        position: relative;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 16px rgba(66, 153, 225, 0.3);
+        border: 3px solid rgba(255, 255, 255, 0.8);
+      }
+
+      .molecule-label {
+        margin-top: 12px;
+        font-size: 14px;
+        color: #2d3748;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .collision-particles {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+      }
+
+      @keyframes particleAnimation {
+        0% {
+          transform: translate(0, 0) scale(1.5);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--tx), var(--ty)) scale(0);
+          opacity: 0;
+        }
+      }
+
+      @keyframes rotateOnApproach {
+        0% {
+          transform: rotate(0deg) scale(1);
+        }
+        50% {
+          transform: rotate(180deg) scale(1.1);
+        }
+        100% {
+          transform: rotate(360deg) scale(1);
+        }
+      }
+
+      .rotating {
+        animation: rotateOnApproach 2s linear infinite;
+      }
+
+      .product {
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .explanation {
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .explanation h2 {
+        font-size: 1.4em;
+        color: #2c5282;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #bee3f8;
+        padding-bottom: 8px;
+      }
+
+      .explanation p,
+      .explanation li {
+        font-size: 1em;
+        color: #4a5568;
+        line-height: 1.6;
+        margin-bottom: 12px;
+      }
+
+      .explanation ul {
+        padding-left: 25px;
+        margin-bottom: 15px;
+      }
+
+      .explanation li::marker {
+        color: #4299e1;
+      }
+
+      /* Custom scrollbar for the right panel */
+      .right-panel::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .right-panel::-webkit-scrollbar-track {
+        background: #f0f9ff;
+        border-radius: 4px;
+      }
+
+      .right-panel::-webkit-scrollbar-thumb {
+        background: #4299e1;
+        border-radius: 4px;
+      }
+
+      .right-panel::-webkit-scrollbar-thumb:hover {
+        background: #3182ce;
+      }
+
+      /* Molecule specific colors */
+      #hcl .molecule-content {
+        background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+      }
+
+      #naoh .molecule-content {
+        background: linear-gradient(135deg, #68d391 0%, #48bb78 100%);
+      }
+
+      #nacl .molecule-content {
+        background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+      }
+
+      #h2o .molecule-content {
+        background: linear-gradient(135deg, #90cdf4 0%, #63b3ed 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="left-panel">
+        <div class="header">
+          <h1>Chemical Reaction: HCl + NaOH → NaCl + H₂O</h1>
+          <p>
+            Watch the collision reaction between hydrochloric acid and sodium
+            hydroxide
+          </p>
+        </div>
+
+        <div class="reaction-stage" id="reactionStage">
+          <div class="molecule" id="hcl" style="left: 10%; top: 40%">
+            <div class="molecule-content">HCl</div>
+            <div class="molecule-label">Hydrochloric Acid</div>
+          </div>
+
+          <div class="molecule" id="naoh" style="right: 10%; top: 40%">
+            <div class="molecule-content">NaOH</div>
+            <div class="molecule-label">Sodium Hydroxide</div>
+          </div>
+
+          <div class="molecule product" id="nacl" style="left: 35%; top: 40%">
+            <div class="molecule-content">NaCl</div>
+            <div class="molecule-label">Sodium Chloride</div>
+          </div>
+
+          <div class="molecule product" id="h2o" style="right: 35%; top: 40%">
+            <div class="molecule-content">H₂O</div>
+            <div class="molecule-label">Water</div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button onclick="startReaction()">Start Reaction</button>
+          <button onclick="resetReaction()">Reset</button>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="explanation">
+          <h2>Reaction Explanation</h2>
+          <p>
+            This animation demonstrates the neutralization reaction between
+            hydrochloric acid (HCl) and sodium hydroxide (NaOH).
+          </p>
+          <p>
+            When these compounds collide with sufficient energy, they react to
+            form:
+          </p>
+          <ul>
+            <li>Sodium chloride (NaCl) - common table salt</li>
+            <li>Water (H₂O)</li>
+          </ul>
+          <p>
+            This is an example of a neutralization reaction where an acid and
+            base combine to form a salt and water.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function createParticles(x, y) {
+        const particleCount = 12;
+        const stage = document.getElementById('reactionStage');
+
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'collision-particles';
+          particle.style.left = x + 'px';
+          particle.style.top = y + 'px';
+
+          const angle = (i / particleCount) * 2 * Math.PI;
+          const distance = 50 + Math.random() * 30;
+          const tx = Math.cos(angle) * distance;
+          const ty = Math.sin(angle) * distance;
+
+          particle.style.setProperty('--tx', tx + 'px');
+          particle.style.setProperty('--ty', ty + 'px');
+
+          stage.appendChild(particle);
+
+          requestAnimationFrame(() => {
+            particle.style.animation =
+              'particleAnimation 0.8s ease-out forwards';
+            setTimeout(() => particle.remove(), 800);
+          });
+        }
+      }
+
+      function startReaction() {
+        const hcl = document.getElementById('hcl');
+        const naoh = document.getElementById('naoh');
+        const nacl = document.getElementById('nacl');
+        const h2o = document.getElementById('h2o');
+        const stage = document.getElementById('reactionStage');
+
+        hcl.querySelector('.molecule-content').classList.add('rotating');
+        naoh.querySelector('.molecule-content').classList.add('rotating');
+
+        setTimeout(() => {
+          hcl.style.left = '45%';
+          naoh.style.right = '45%';
+        }, 100);
+
+        setTimeout(() => {
+          hcl.querySelector('.molecule-content').classList.remove('rotating');
+          naoh.querySelector('.molecule-content').classList.remove('rotating');
+
+          const stageRect = stage.getBoundingClientRect();
+          const collisionX = stageRect.width / 2;
+          const collisionY = stageRect.height / 2;
+
+          createParticles(collisionX, collisionY);
+
+          hcl.style.opacity = '0';
+          naoh.style.opacity = '0';
+
+          setTimeout(() => {
+            nacl.style.opacity = '1';
+            nacl.style.transform = 'scale(1)';
+            h2o.style.opacity = '1';
+            h2o.style.transform = 'scale(1)';
+          }, 300);
+        }, 2000);
+      }
+
+      function resetReaction() {
+        const hcl = document.getElementById('hcl');
+        const naoh = document.getElementById('naoh');
+        const nacl = document.getElementById('nacl');
+        const h2o = document.getElementById('h2o');
+
+        hcl.querySelector('.molecule-content').classList.remove('rotating');
+        naoh.querySelector('.molecule-content').classList.remove('rotating');
+
+        hcl.style.left = '10%';
+        naoh.style.right = '10%';
+        hcl.style.opacity = '1';
+        naoh.style.opacity = '1';
+
+        nacl.style.opacity = '0';
+        nacl.style.transform = 'scale(0)';
+        h2o.style.opacity = '0';
+        h2o.style.transform = 'scale(0)';
+
+        document
+          .querySelectorAll('.collision-particles')
+          .forEach((particle) => particle.remove());
+      }
+
+      resetReaction();
+    </script>
+  </body>
+</html>
